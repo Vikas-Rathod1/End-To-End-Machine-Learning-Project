@@ -8,10 +8,15 @@ def get_requirements(file_path:str)-> List[str]: # type: ignore
     This method will return the liast of required packages
 
     """
+    #need not come -e in setup file for installation in this get_requirements method
+    HYPEN_E_DOT = '-e .'
     requirements = []
     with open(file_path) as file_obj:
         requirements=file_obj.readline()
         requirements = [req.replace("\n","") for req in requirements]
+        if HYPEN_E_DOT in requirements:
+            requirements.remove(HYPEN_E_DOT)
+
     
     setup(
 
