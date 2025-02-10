@@ -1,8 +1,7 @@
 import sys
-from src import logger
-import logging
+from src.logger import logging
 
-def error_message_details(error, error_detail: sys):  # type: ignore
+def error_message_details(error: Exception, error_detail: sys) -> str:
     """
     Generates a detailed error message including the filename, line number, and error description.
 
@@ -33,16 +32,16 @@ class CustomException(Exception):
         error_detail (sys): The system module used to extract error details.
     """
 
-    def __init__(self, error_message, error_detail: sys):  # type: ignore
+    def __init__(self, error: Exception, error_detail: sys):  # type: ignore
         """
         Initializes the CustomException instance with a detailed error message.
 
         Args:
-            error_message (str): The error message describing the issue.
+            error (Exception): The exception instance.
             error_detail (sys): The system module used to retrieve traceback details.
         """
-        super().__init__(error_message)
-        self.error_message = error_message_details(error_message, error_detail=error_detail)
+        super().__init__(str(error))
+        self.error_message = error_message_details(error, error_detail=error_detail)
 
     def __str__(self):
         """
@@ -52,7 +51,11 @@ class CustomException(Exception):
             str: A detailed error message.
         """
         return self.error_message
-    
 
 
-
+if __name__ == "__main__":
+    try:
+        a = 10 / 0  # This will raise ZeroDivisionError
+    except Exception as e:
+        logging.info("Divide by zero exception...")
+        raise CustomException(e, sys)
